@@ -57,7 +57,8 @@ namespace MvcHtmlInputDemo.Controllers
                         }
                     }
                 }
-                else{
+                else
+                {
                     requestDto.ProfilePicture = new byte[0];
                     requestDto.ProfilePictureName = string.Empty;
                 }
@@ -78,7 +79,13 @@ namespace MvcHtmlInputDemo.Controllers
         // GET: UserController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var cityService = new CityService();
+            var cityDetails = cityService.GetAll();
+            ViewBag.CityList = new SelectList(cityDetails.AsEnumerable(), "CityId", "Name");
+
+            var userService = new UserService();
+            var data = userService.GetById(id);
+            return View(data);
         }
 
         // POST: UserController/Edit/5

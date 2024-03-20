@@ -8,7 +8,7 @@ namespace MvcHtmlInputDemo.Database
     {
         public static string sqlDataSource = "Data Source=DESKTOP-HKULI1B;Initial Catalog=Demo; user id = sa; password = spark; Integrated Security=True;";
 
-        public DataTable GetData(string str)
+        public DataTable GetData(string str, params IDataParameter[] sqlParams)
         {
             DataTable objresutl = new DataTable();
             try
@@ -20,10 +20,25 @@ namespace MvcHtmlInputDemo.Database
                     myCon.Open();
                     using (SqlCommand myCommand = new SqlCommand(str, myCon))
                     {
-                        myReader = myCommand.ExecuteReader();
-                        objresutl.Load(myReader);
-                        myReader.Close();
-                        myCon.Close();
+                        if (sqlParams != null)
+                        {
+                            foreach (IDataParameter para in sqlParams)
+                            {
+                                myCommand.Parameters.Add(para);
+                            }
+
+                            myReader = myCommand.ExecuteReader();
+                            objresutl.Load(myReader);
+                            myReader.Close();
+                            myCon.Close();
+                        }
+                        else
+                        {
+                            myReader = myCommand.ExecuteReader();
+                            objresutl.Load(myReader);
+                            myReader.Close();
+                            myCon.Close();
+                        }
                     }
                 }
             }
@@ -49,6 +64,10 @@ namespace MvcHtmlInputDemo.Database
                             {
                                 cmd.Parameters.Add(para);
                             }
+                            rows = cmd.ExecuteNonQuery();
+                        }
+                        else
+                        {
                             rows = cmd.ExecuteNonQuery();
                         }
                     }

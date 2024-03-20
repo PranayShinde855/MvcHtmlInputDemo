@@ -11,10 +11,10 @@ namespace MvcHtmlInputDemo.Service
     {
         private string connectionString = "Data Source=DESKTOP-HKULI1B;Initial catalog=Demo;user Id = sa; password = spark;";
 
-        public string Add(AddUserDto requestDto) 
+        public string Add(AddUserDto requestDto)
         {
-            string query = "insert into [User] (FullName, Gender, CityId, Cricket, Kabbdai, Tenies)" +//, ProfilePicture, ProfilePictureName)" +
-                " values (@FullName, @Gender, @CityId, @Cricket, @Kabbdai, @Tenies)";//, @ProfilePicture, @ProfilePictureName);";
+            string query = "insert into [User] (FullName, Gender, CityId, Cricket, Kabbdai, Tenies, ProfilePicture, ProfilePictureName)" +
+                " values (@FullName, @Gender, @CityId, @Cricket, @Kabbdai, @Tenies, @ProfilePicture, @ProfilePictureName);";
             var parameters = new IDataParameter[]
             {
                 new SqlParameter("@FullName", requestDto.Fullname),
@@ -52,11 +52,10 @@ namespace MvcHtmlInputDemo.Service
             var dbContext = new DB();
             return dbContext.ExecuteData(query, parameters);
         }
-
         public List<UserDto> GetAll()
         {
             string query = "Select u.Id, u.FullName, u.Gender, c.Name as City, u.FullName as sports from [User] u " +
-                "left join City c on u.CityId = c.Id ;";           
+                "left join City c on u.CityId = c.Id ;";
 
             var dbContext = new DB();
             var data = dbContext.GetData(query);
@@ -69,6 +68,33 @@ namespace MvcHtmlInputDemo.Service
                 Gender = row.Field<string>("Gender"),
                 Sports = row.Field<string>("Sports")
             }).ToList();
+            return result;
+        }
+
+        public UpdateUserdto GetById(int id)
+        {
+            string query = "Select * from [User] where Id = @Id;";
+
+            var parameters = new IDataParameter[]
+            {
+                new SqlParameter("@Id", id)
+            };
+
+            var dbContext = new DB();
+            var data = dbContext.GetData(query, parameters);
+            var result = data.AsEnumerable().Select(row =>
+            new UpdateUserdto
+            {
+                Id = row.Field<int>("Id"),
+                Fullname = row.Field<string>("FullName"),
+                CityId = row.Field<int>("CityId"),
+                Gender = row.Field<string>("Gender"),
+                Cricket = row.Field<bool>("Cricket"),
+                Kabbdai = row.Field<bool>("Kabbdai"),
+                Tenies = row.Field<bool>("Tenies"),
+                ProfilePicture = row.Field<byte[]>("ProfilePicture"),
+                ProfilePictureName = row.Field<string>("ProfilePictureName")
+            }).FirstOrDefault();
             return result;
         }
     }
