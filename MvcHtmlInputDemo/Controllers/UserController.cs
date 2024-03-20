@@ -5,17 +5,18 @@ using MvcHtmlInputDemo.Dto;
 using MvcHtmlInputDemo.Service;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace MvcHtmlInputDemo.Controllers
 {
     public class UserController : Controller
-    {               
+    {
         // GET: UserController
         public ActionResult<List<UserDto>> Index()
         {
             var userService = new UserService();
-            var data = userService.GetAll();            
+            var data = userService.GetAll();
             return View(data);
         }
 
@@ -37,31 +38,36 @@ namespace MvcHtmlInputDemo.Controllers
         // POST: UserController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collections)
+        public ActionResult Create([Bind("Fullname,CityId,Gender,Cricket,Kabbdai,Tenies,ProfilePicture,ProfilePictureName")] AddUserDto requestDto)
         {
             try
             {
-                var collection = collections;
-                var convert = Convert.ToByte(collection["ProfilePicture"]);
-
-                var addUserDto = new AddUserDto()
+                var files = Request.Form.Files;
+                if (files != null && files.Count() > 0)
                 {
-                    Gender = collection["Gender"],
-                    CityId = Convert.ToInt32(collection["CityId"]),
-                    Cricket = collection["Cricket"] != "" ? true : false,
-                    Kabbdai = collection["Kabbdai"] != "" ? true : false,
-                    Tenies = collection["Tenies"] != "" ? true : false,
-                    Fullname = collection["Fullname"],
-                    ProfilePicture = null,// Convert.ToByte(collection["ProfilePicture"]),
-                    ProfilePictureName = "test"
-                };
-                //addUserDto.ProfilePicture = System.IO.File.ReadAllBytes(collection["ProfilePicture"]);
+                    var file = files.FirstOrDefault();
+                    if (file.Length > 0)
+                    {
+                        using (var ms = new MemoryStream())
+                        {
+                            file.CopyTo(ms);
+                            var fileBytes = ms.ToArray();
+                            requestDto.ProfilePicture = fileBytes;
+                            requestDto.ProfilePictureName = file.FileName;
+                        }
+                    }
+                }
+                else{
+                    requestDto.ProfilePicture = new byte[0];
+                    requestDto.ProfilePictureName = string.Empty;
+                }
                 var userService = new UserService();
-                var result = userService.Add(addUserDto);
-                if(result != "Success")
+                var result = userService.Add(requestDto);
+                if (result != "Success")
                     return RedirectToPage("Error.cshtml");
 
                 return RedirectToAction(nameof(Index));
+
             }
             catch (Exception ex)
             {

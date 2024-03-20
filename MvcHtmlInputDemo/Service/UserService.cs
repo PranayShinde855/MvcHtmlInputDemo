@@ -23,8 +23,8 @@ namespace MvcHtmlInputDemo.Service
                 new SqlParameter("@Cricket", requestDto.Cricket),
                 new SqlParameter("@Kabbdai", requestDto.Kabbdai),
                 new SqlParameter("@Tenies", requestDto.Tenies),
-                //new SqlParameter("@ProfilePicture", null),
-                //new SqlParameter("@ProfilePictureName", requestDto.ProfilePictureName),
+                new SqlParameter("@ProfilePicture",  requestDto.ProfilePicture),
+                new SqlParameter("@ProfilePictureName", requestDto.ProfilePictureName),
            };
 
             var dbContext = new DB();

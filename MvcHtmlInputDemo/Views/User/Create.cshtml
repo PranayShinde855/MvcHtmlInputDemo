@@ -9,63 +9,83 @@
 <h4>AddUserDto</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" method="post">
+    <div class="col-md-12">
+        @using (Html.BeginForm("Create", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Fullname" class="control-label"></label>
+            <div class="form-group col-md-4">
+                <label class="control-label">Full Name: </label>
                 <input asp-for="Fullname" type="text" class="form-control" />
                 <span asp-validation-for="Fullname" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Gender" class="control-label"></label>
+            <div class="form-group col-md-8">
+                <div class="form-group col-md-2">
+                    <label asp-for="Gender" class="control-label"></label>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label name="Male" class="control-label">Male</label>
+                    <input asp-for="Gender" type="radio" value="Male" class="form-control" />
+                    <span asp-validation-for="Gender" class="text-danger"></span>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label name="Female" class="control-label">Female</label>
+                    <input asp-for="Gender" type="radio" value="Female" class="form-control" />
+                    <span asp-validation-for="Gender" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label name="Male" class="control-label">Male</label>
-                <input asp-for="Gender" type="radio" value="Male" class="form-control" />
-                <span asp-validation-for="Gender" class="text-danger"></span>
+            <div class="form-group col-md-6">
+                <div class="form-group col-md-2">
+                    <label asp-for="CityId" class="control-label"></label>
+                </div>
+                <div class="form-group col-md-4">
+                    @*<input asp-for="CityId" class="form-control" />*@
+                    @Html.DropDownListFor(model => model.CityId, ViewBag.CityList as SelectList, new { @class = "form-control" })
+                    <span asp-validation-for="CityId" class="text-danger"></span>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label name="Female" class="control-label">Female</label>
-                <input asp-for="Gender" type="radio" value="Female" class="form-control" />
-                <span asp-validation-for="Gender" class="text-danger"></span>
-            </div>
+            <div class="form-group col-md-12">
+                <div class="form-group col-md-2">
+                    <label class="control-label">Sports</label>
+                </div>
+                <div class="form-group col-md-2">
+                    <label asp-for="Cricket" class="control-label"></label>
+                    </Div>
+                    <div class="form-group col-md-1">                        
+                        @Html.CheckBoxFor(x => x.Cricket, new { @class = "form-control" })
+                        @*<input id="Cricket" name="Cricket" type="checkbox" value="true" />*@
+                        <span asp-validation-for="Cricket" class="text-danger"></span>
+                    </div>
 
-            <div class="form-group">
-                <label asp-for="CityId" class="control-label"></label>
-                @*<input asp-for="CityId" class="form-control" />*@
-                @Html.DropDownListFor(model => model.CityId, ViewBag.CityList as SelectList, new { @class = "form-control" })
-                <span asp-validation-for="CityId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Cricket" class="control-label"></label>
-                @*<input asp-for="Cricket" type="checkbox" class="form-control" />*@
-                <input id="Cricket" name="Cricket" type="checkbox" value="true" />
-                <span asp-validation-for="Cricket" class="text-danger"></span>
+                    <div class="form-group col-md-2">
+                        <label asp-for="Kabbdai" class="control-label"></label>
+                    </div>
+                        <div class="form-group col-md-1">
+                            @Html.CheckBoxFor(x => x.Kabbdai, new { @class = "form-control" })
+                            <span asp-validation-for="Kabbdai" class="text-danger"></span>
+                        </div>
 
-            </div>
-            <div class="form-group">
-                <label asp-for="Kabbdai" class="control-label"></label>
-                @*<input asp-for="Kabbdai" type ="checkbox" class="form-control" />*@
-                <input id="Kabbdai" name="Kabbdai" type="checkbox" value="true" />
-                <span asp-validation-for="Kabbdai" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Tenies" class="control-label"></label>
-                @* <input asp-for="Tenies" type ="checkbox" class="form-control" />*@
-                <input id="Tenies" name="Tenies" type="checkbox" value="true" />
-                <span asp-validation-for="Tenies" class="text-danger"></span>
-            </div>
+                        <div class="form-group col-md-2">
+                            <label asp-for="Tenies" class="control-label"></label>
+                            </div>
+                        <div class="form-group col-md-1">
+                            @Html.CheckBoxFor(x => x.Tenies, new { @class = "form-control" })
+                            <span asp-validation-for="Tenies" class="text-danger"></span>
+                        </div>
+                    </div>
+
             <div class="form-group">
                 <img id="user_img" height="100" width="90" style="border:solid" />
-                @*<input asp-for="ProfilePicture" type="file" name="ImageData" id="ImageData" onchange="show(this);" />*@
-                <input asp-for="ProfilePicture" type="file" title="search image" id="file" name="file" onchange="show(this)" />
+                <input type="file" name="ImageData" id="ImageData" onchange="show(this);" />
+                @*<input asp-for="ProfilePicture" type="file" name="ImageData" id="search image" onchange="show(this);" />*@
+                @*<input asp-for="ProfilePicture" type="file" title="search image" id="file" name="file" onchange="show(this)" />*@
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
-        </form>
+        }
     </div>
 </div>
 
