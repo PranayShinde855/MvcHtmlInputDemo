@@ -33,8 +33,8 @@ namespace MvcHtmlInputDemo.Service
 
         public string Update(UpdateUserdto requestDto)
         {
-            string query = "Update table [User] Set FullName = @FullName, Gender = @Gender, CityId = @CityId, Cricket = @Cricket," +
-                " Kabbdai = @Kabbdai, Tenies = @Tenies, ProfilePicture = @ProfilePicture, ProfilePictureName = @ProfilePictureName)" +
+            string query = "Update [User] Set FullName = @FullName, Gender = @Gender, CityId = @CityId, Cricket = @Cricket," +
+                " Kabbdai = @Kabbdai, Tenies = @Tenies, ProfilePicture = @ProfilePicture, ProfilePictureName = @ProfilePictureName" +
                 " where Id = @Id";
             var parameters = new IDataParameter[]
             {

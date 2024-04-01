@@ -95,18 +95,43 @@ namespace MvcHtmlInputDemo.Controllers
         // POST: UserController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit([Bind("Id,Fullname,CityId,Gender,Cricket,Kabbdai,Tenies,ProfilePicture,ProfilePictureName")] UpdateUserdto requestDto)
         {
             try
             {
+                var files = Request.Form.Files;
+                if (files != null && files.Count() > 0)
+                {
+                    var file = files.FirstOrDefault();
+                    if (file.Length > 0)
+                    {
+                        using (var ms = new MemoryStream())
+                        {
+                            file.CopyTo(ms);
+                            var fileBytes = ms.ToArray();
+                            requestDto.ProfilePicture = fileBytes;
+                            requestDto.ProfilePictureName = file.FileName;
+                        }
+                    }
+                }
+                else
+                {
+                    requestDto.ProfilePicture = new byte[0];
+                    requestDto.ProfilePictureName = string.Empty;
+                }
+                var userService = new UserService();
+                var result = userService.Update(requestDto);
+                if (result != "Success")
+                    return RedirectToPage("Error.cshtml");
+
                 return RedirectToAction(nameof(Index));
+
             }
-            catch
+            catch (Exception ex)
             {
                 return View();
             }
         }
-
         // GET: UserController/Delete/5
         public ActionResult Delete(int id)
         {
