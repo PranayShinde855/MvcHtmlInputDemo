@@ -85,10 +85,15 @@
             </div>
 
             <div class="form-group">
-                <img id="user_img" height="100" width="90" style="border:solid" /> 
+                @if (@Model.Image == null || @Model.Image.Length <= 0)
+                {
+                    <img id="user_img" height="100" width="90" style="border:solid" />
+                }
+                else
+                {
+                    <img id="user_img" height="100" width="90" style="border:solid"  src="@Model.Image" alt="Image" />
+                }
                 <input type="file" name="ImageData" id="ImageData" onchange="show(this);" />
-                @*<input asp-for="ProfilePicture" type="file" name="ImageData" id="search image" onchange="show(this);" />*@
-                @*<input asp-for="ProfilePicture" type="file" title="search image" id="file" name="file" onchange="show(this)" />*@
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

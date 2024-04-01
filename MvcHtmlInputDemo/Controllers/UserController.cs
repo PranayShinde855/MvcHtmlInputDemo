@@ -85,6 +85,10 @@ namespace MvcHtmlInputDemo.Controllers
 
             var userService = new UserService();
             var data = userService.GetById(id);
+            if (data.ProfilePicture != null && data.ProfilePicture.Length > 0)
+            {
+                data.Image = $"data:image/{data.ProfilePictureName};base64, {Convert.ToBase64String(data.ProfilePicture)}";
+            }
             return View(data);
         }
 
@@ -122,6 +126,15 @@ namespace MvcHtmlInputDemo.Controllers
             {
                 return View();
             }
+        }
+
+        public string Base64ImageTo(int id)
+        {
+            var userService = new UserService();
+            var data = userService.GetById(id);
+            
+            var base64 = Convert.ToBase64String(data.ProfilePicture);
+            return $"data:image/gif;base64,{base64}";
         }
     }
 }

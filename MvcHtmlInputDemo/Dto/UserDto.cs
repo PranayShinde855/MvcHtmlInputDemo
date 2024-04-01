@@ -35,5 +35,6 @@
     public class UpdateUserdto : AddUserDto
     {
         public int Id { get; set; }
+        public string Image { get; set; }
     }
 }
